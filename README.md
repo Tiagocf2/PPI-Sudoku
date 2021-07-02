@@ -1,4 +1,4 @@
 # PPI Sudoku
-### Projeto 1 da disciplina de ProgramaÁ„o para Internet I do IFB
+> Projeto 1 da disciplina de Programa√ß√£o para Internet I do IFB
 
 [![Link](https://shields.io/badge/-Ir%20para%20o%20Site-fff)](https://tiagocf2.github.io/PPI-Sudoku/)
