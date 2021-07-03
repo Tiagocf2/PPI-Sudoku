@@ -1,3 +1,44 @@
+body{
+	text-align: center;
+}
+
+h1{
+	font-size: 40px;
+	font-family: 'High Tower Text';
+	letter-spacing:35px;
+	color: #3b4657;
+	text-shadow: 0px 2px 5px #a7a8ab;
+}
+
+button{
+	border:none;
+	border-radius: 12px;
+	background:#a7a8ab;
+	cursor: pointer;
+	padding:15px 25px;
+	margin-right: 30px;
+	display: inline-block;
+	box-shadow: 0 9px #999;
+	outline:none;
+
+	font-family: 'High Tower Text';
+	color:#3b4657;
+	font-size: 15px; 
+	transition: all 0.2s ease;
+}
+
+button:hover{
+	background: white;
+}
+
+button:active {
+  background-color:#a2a6a5;
+  box-shadow: 0 5px #fff;
+  transform: translateY(3px);
+}
 canvas{
     outline: 1px solid black;
+    display: inline-block;
 }
+
+
