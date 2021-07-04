@@ -1,7 +1,3 @@
-/* VARIAVEIS GLOBAIS */
-let sudoku; //tabela
-let canvas; //objeto
-
 class Sudoku{
     constructor(elemento_HTML, size = 500, boardSize = 9){
         /*CONSTANTES*/
@@ -18,6 +14,7 @@ class Sudoku{
         this.board = undefined;
 
         this.canvas.addEventListener('mouseup', handleMouse);
+        document.sudoku = this;
         document.addEventListener('keyup', handleKeyboard);
         
         this.initBoard();
@@ -141,12 +138,12 @@ function handleKeyboard(e){
     //Numeros 1 ate 9
     if(key >= 1 && key <= 9){
         let number = parseInt(key);
-        sudoku.inputNumber(number);
+        document.sudoku.inputNumber(number);
     }
 
     //Backspace
     if(key == 'Backspace'){
         e.stopPropagation();
-        sudoku.removeNumber();
+        document.sudoku.removeNumber();
     }
 }
