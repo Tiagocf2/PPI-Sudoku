@@ -24,8 +24,10 @@ class Sudoku{
         this.boardSize = boardSize;
         this.board = undefined;
 
+        this.canvas.tabIndex = 1; //Faz o elemento ser focável
+        this.canvas.addEventListener('focusout', unfocus);
         this.canvas.addEventListener('mouseup', handleMouse);
-        document.addEventListener('keyup', handleKeyboard);
+        document.addEventListener('keydown', handleKeyboard);
 
         this.initBoard();
     }
@@ -112,7 +114,15 @@ class Sudoku{
     }
 
     select(x, y){
+        x = (this.boardSize + x) * (x < 0) + (x % this.boardSize) * (x > 0);
+        y = (this.boardSize + y) * (y < 0) + (y % this.boardSize) * (y > 0);
         this.selected = {"x": x, "y": y};
+
+        this.drawBoard();
+    }
+
+    unselect(){
+        this.selected = undefined;
 
         this.drawBoard();
     }
@@ -265,6 +275,10 @@ class Sudoku{
     }
 }
 
+function unfocus(e){
+    this.sudoku.unselect();
+}
+
 function handleMouse(e){
     //Posição X dentro do objeto
     let x = e.layerX; 
@@ -289,8 +303,24 @@ function handleKeyboard(e){
 
     //Backspace
     if(key == 'Backspace'){
-        e.stopPropagation();
+        e.preventDefault();
         sudoku.removeNumber();
+    }
+
+    if(key == 'ArrowRight'){
+        sudoku.select(sudoku.selected.x+1, sudoku.selected.y);
+    }
+
+    if(key == 'ArrowLeft'){
+        sudoku.select(sudoku.selected.x-1, sudoku.selected.y);
+    }
+
+    if(key == 'ArrowUp'){
+        sudoku.select(sudoku.selected.x, sudoku.selected.y-1);
+    }
+
+    if(key == 'ArrowDown'){
+        sudoku.select(sudoku.selected.x, sudoku.selected.y+1);
     }
 }
 
