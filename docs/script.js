@@ -254,13 +254,14 @@ class Sudoku{
     }
 
     validSolution(){
-        let maxtry = 100000;
+        let maxtry = 10000;
         let maxsum = 9 * 9;
         let sum = 0;  
         do{
             sum += sudoku.gerarTabuleiro();
             console.log(maxtry--);
         }while(sum < maxsum && maxtry > 0);  
+        this.drawBoard();
     }
 }
 
