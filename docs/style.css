@@ -41,19 +41,17 @@ button{
 	font-size: 15px;
 	font-weight: bold;
 	color:#3b4657;
-	transition: all 0.2s cubic-bezier(0,1.5,1,1.5), 
-		box-shadow 0.2s cubic-bezier(0,1.5,1,1.5),
-		background-color 0.2s ease;
+	transition: all 0.15s ease;
 }
 
 button:hover{
-	background: #efefef;
+	background: #ddd;
 }
 
 button:active {
-  background-color:#a2a6a5;
-  box-shadow: 0 5px #fff;
-  transform: translateY(3px);
+  background-color:#999;
+  box-shadow: 0 0px #999;
+  transform: translateY(9px);
 }
 
 canvas{
