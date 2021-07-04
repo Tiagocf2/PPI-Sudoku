@@ -51,9 +51,7 @@ class Sudoku{
         let ctx = this.canvas.getContext('2d');
         
         /* Clear Canvas */
-        ctx.beginPath();
-        ctx.fillStyle = this.BACKGROUND_COLOR;
-        ctx.fillRect(0, 0, this.size, this.size);
+        this.resetBoard();
 
         /*Selected Square*/
         if(this.selected){
@@ -103,6 +101,14 @@ class Sudoku{
             }
         }
 
+    }  
+
+    resetBoard(){
+        /* Clear Canvas */
+        let ctx = this.canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.fillStyle = this.BACKGROUND_COLOR;
+        ctx.fillRect(0, 0, this.size, this.size);
     }
 
     select(x, y){
@@ -150,14 +156,28 @@ class Sudoku{
 
     }
 
-    checkNumber(x, y){
-        return this.checkLine(x, y, true)
-        && this.checkLine(x, y)
-        && this.checkSquare(x, y);
+    checkNumber(x, y, ignoreUndefined = false){
+        let ok = this.checkLine(x, y, true, ignoreUndefined);
+        let ok2 = this.checkLine(x, y, false, ignoreUndefined);
+        let ok3 =  this.checkSquare(x, y, ignoreUndefined);
+        //console.log(ok, ok2, ok3);
+        return ok && ok2 && ok3;
     }
 
-    checkLine(x, y, vertical = false){
-        if(this.board[y][x] == undefined){
+    isNumberValidAt(num, x, y){
+        //console.log(this.board[y][x]);
+        if(this.board[y][x]){
+            return false;
+        }
+        this.board[y][x] = num;
+        let isValid = this.checkNumber(x, y, true);
+        //console.log(this.board[y][x], isValid);
+        this.board[y][x] = undefined;
+        return isValid;
+    }
+
+    checkLine(x, y, vertical = false, ignoreUndefined = false){
+        if(!this.board[y][x] && !ignoreUndefined){
             return false;
         }
 
@@ -168,7 +188,7 @@ class Sudoku{
                 continue;
             }
 
-            if(this.board[_y][_x] == undefined){
+            if(!this.board[_y][_x] && !ignoreUndefined){
                 return false;
             }
 
@@ -179,9 +199,9 @@ class Sudoku{
         return true;
     }
 
-    checkSquare(x, y){
+    checkSquare(x, y, ignoreUndefined = false){
 
-        if(this.board[y][x] == undefined){
+        if(!this.board[y][x] && !ignoreUndefined){
             return false;
         }
 
@@ -199,7 +219,7 @@ class Sudoku{
                 if(this.board[y][x] == this.board[sy][sx]){
                     return false;
                 }
-                if(this.board[sy][sx] == undefined){
+                if(!this.board[sy][sx] && !ignoreUndefined){
                     return false;
                 }
             }
@@ -208,16 +228,21 @@ class Sudoku{
     }
     gerarTabuleiro(){
         let numeros = [1,2,3,4,5,6,7,8,9];
+        let n = 0;
 
         for(let i = 0; i <= 9; i++){
             let aleatorio = Math.floor(Math.random()*9);
             let aleatorioX = Math.floor(Math.random()*9);
             let aleatorioY = Math.floor(Math.random()*9);
-            if(this.checkNumber(aleatorioX,aleatorioY)){
-                this.board[aleatorioX][aleatorioY] = (numeros[aleatorio]);
+            if(this.isNumberValidAt(numeros[aleatorio],aleatorioX,aleatorioY)){
+                this.board[aleatorioY][aleatorioX] = numeros[aleatorio];
+                n++;
             }
         }
+        //this.drawBoard();
+        return n;
     }
+
     generateTestBoard(){
         for(let y = 0; y < this.boardSize; y++){
             let of = y % 3 * 3 + Math.floor(y / 3);
@@ -226,6 +251,16 @@ class Sudoku{
             }
         }
         this.drawBoard();
+    }
+
+    validSolution(){
+        let maxtry = 100000;
+        let maxsum = 9 * 9;
+        let sum = 0;  
+        do{
+            sum += sudoku.gerarTabuleiro();
+            console.log(maxtry--);
+        }while(sum < maxsum && maxtry > 0);  
     }
 }
 
