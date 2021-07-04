@@ -2,17 +2,6 @@
 let sudoku; //tabela
 let canvas; //objeto
 
-/* INICIALIZAÇÃO */
-window.onload = function(){
-    canvas = document.getElementById("sudoku-canvas");
-
-    canvas.addEventListener('mouseup', handleMouse);
-    document.addEventListener('keyup', handleKeyboard);
-    
-    sudoku = new Sudoku(canvas);
-};
-
-
 class Sudoku{
     constructor(elemento_HTML, size = 500, boardSize = 9){
         /*CONSTANTES*/
@@ -28,6 +17,9 @@ class Sudoku{
         this.boardSize = boardSize;
         this.board = undefined;
 
+        this.canvas.addEventListener('mouseup', handleMouse);
+        document.addEventListener('keyup', handleKeyboard);
+        
         this.initBoard();
     }
 
