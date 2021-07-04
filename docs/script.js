@@ -5,10 +5,6 @@ let canvas; //objeto
 /* INICIALIZAÇÃO */
 window.onload = function(){
     canvas = document.getElementById("sudoku-canvas");
-
-    canvas.addEventListener('mouseup', handleMouse);
-    document.addEventListener('keyup', handleKeyboard);
-    
     sudoku = new Sudoku(canvas);
 };
 
@@ -16,7 +12,7 @@ window.onload = function(){
 class Sudoku{
     constructor(elemento_HTML, size = 500, boardSize = 9){
         /*CONSTANTES*/
-        this.SELECTED_COLOR = '#ddd';
+        this.SELECTED_COLOR = '#ccc';
         this.BACKGROUND_COLOR = '#fff';
         this.GRID_COLOR = '#000';
         this.FONT_SIZE = '63px';
@@ -27,6 +23,9 @@ class Sudoku{
         this.size = size;
         this.boardSize = boardSize;
         this.board = undefined;
+
+        this.canvas.addEventListener('mouseup', handleMouse);
+        document.addEventListener('keyup', handleKeyboard);
 
         this.initBoard();
     }
@@ -69,7 +68,7 @@ class Sudoku{
         /*Sudoku Grid*/
         for(let i = 1; i < this.boardSize; i++){
             ctx.beginPath();
-            ctx.fillStyle = this.GRID_COLOR;
+            ctx.strokeStyle = this.GRID_COLOR;
             ctx.lineWidth = 1;
             if(i % 3 == 0){ //Linha grossa
                 ctx.lineWidth = 4;
@@ -128,6 +127,95 @@ class Sudoku{
         this.drawBoard();
     }
 
+    checkBoard(){
+        //Checa as linhas
+        for(let i = 0; i < this.boardSize; i++){
+            let ok = this.checkLine(0,i);
+            ok = ok && this.checkLine(i,0, true);
+            if(!ok){
+                return false;
+            }
+        }
+
+        //Checa os quadrados grandes
+        for(let y = 0; y < this.boardSize; y += 3){
+            for(let x = 0; x < this.boardSize; x += 3){
+                if(!this.checkSquare(x,y)){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+
+    }
+
+    checkNumber(x, y){
+        return this.checkLine(x, y, true)
+        && this.checkLine(x, y)
+        && this.checkSquare(x, y);
+    }
+
+    checkLine(x, y, vertical = false){
+        if(this.board[y][x] == undefined){
+            return false;
+        }
+
+        for(let i = 0; i < this.boardSize; i++){
+            let _y = (y * !vertical) + (vertical * i);
+            let _x = (x * vertical) + (!vertical * i);
+            if(_y == y && _x == x){
+                continue;
+            }
+
+            if(this.board[_y][_x] == undefined){
+                return false;
+            }
+
+            if(this.board[_y][_x] == this.board[y][x]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    checkSquare(x, y){
+
+        if(this.board[y][x] == undefined){
+            return false;
+        }
+
+        let sqrSize = this.boardSize / 3;
+        let sqrX = Math.floor(x / sqrSize);
+        let sqrY = Math.floor(y / sqrSize);
+        let sqrMaxX = sqrSize * (sqrX + 1);
+        let sqrMaxY = sqrSize * (sqrY + 1);
+
+        for(let sy = sqrY * sqrSize; sy < sqrMaxY; sy++){
+            for(let sx = sqrX * sqrSize; sx < sqrMaxX; sx++){
+                if(sx == x && sy == y){
+                    continue;
+                }
+                if(this.board[y][x] == this.board[sy][sx]){
+                    return false;
+                }
+                if(this.board[sy][sx] == undefined){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    generateTestBoard(){
+        for(let y = 0; y < this.boardSize; y++){
+            let of = y % 3 * 3 + Math.floor(y / 3);
+            for(let x = 0; x < this.boardSize; x++){
+                this.board[y][x] = (x + of) % 9 + 1;
+            }
+        }
+        this.drawBoard();
+    }
 }
 
 function handleMouse(e){
@@ -154,6 +242,18 @@ function handleKeyboard(e){
 
     //Backspace
     if(key == 'Backspace'){
+        e.stopPropagation();
         sudoku.removeNumber();
     }
 }
+
+
+
+
+
+
+let a = 1
+
+let b = 2
+
+let c = a * (a>b) + b * (b>a)
