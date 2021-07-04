@@ -41,8 +41,8 @@ button{
 	font-size: 15px;
 	font-weight: bold;
 	color:#3b4657;
-	transition: all 0.2s cubic-bezier(0,2,1,2), 
-		box-shadow 0.2s cubic-bezier(0,2,1,2),
+	transition: all 0.2s cubic-bezier(0,1.5,1,1.5), 
+		box-shadow 0.2s cubic-bezier(0,1.5,1,1.5),
 		background-color 0.2s ease;
 }
 
