@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fthumb%2Ff%2Fff%2FSudoku-by-L2G-20050714.svg%2F1200px-Sudoku-by-L2G-20050714.svg.png&f=1&nofb=1" width="250px"/>
+  <img src="logo.png" width="250px"/>
   <h1>PPI Sudoku</h1>
 
 
