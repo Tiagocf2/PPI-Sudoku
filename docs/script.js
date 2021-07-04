@@ -206,7 +206,18 @@ class Sudoku{
         }
         return true;
     }
+    gerarTabuleiro(){
+        let numeros = [1,2,3,4,5,6,7,8,9];
 
+        for(let i = 0; i <= 9; i++){
+            let aleatorio = Math.floor(Math.random()*9);
+            let aleatorioX = Math.floor(Math.random()*9);
+            let aleatorioY = Math.floor(Math.random()*9);
+            if(this.checkNumber(aleatorioX,aleatorioY)){
+                this.board[aleatorioX][aleatorioY] = (numeros[aleatorio]);
+            }
+        }
+    }
     generateTestBoard(){
         for(let y = 0; y < this.boardSize; y++){
             let of = y % 3 * 3 + Math.floor(y / 3);
@@ -247,13 +258,3 @@ function handleKeyboard(e){
     }
 }
 
-
-
-
-
-
-let a = 1
-
-let b = 2
-
-let c = a * (a>b) + b * (b>a)
