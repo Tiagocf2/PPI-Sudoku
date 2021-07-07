@@ -350,16 +350,6 @@ function handleMouse(e){
     y = Math.floor(y / tamanho);
     
     this.sudoku.select(x, y);
-    
-    let inp = $("<input type='number' autofocus>");
-    inp.on('input', () => {
-        let num = $('this').val();
-        $('this').val(null);
-        this.sudoku.inputNumber(num);
-    });
-    $(this).append(inp);
-    inp.trigger('focus');
-    inp.focus();
 }
 
 function handleKeyboard(e){
