@@ -408,7 +408,7 @@ $(document).ready(function(){
     });
 
     let isMobile = /Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    if(isMobile) {
+    if(isMobile || true) {
         let keydiv = $('#mobile_keyboard');
         for(let i = 1; i <= 9; i++){
             let btn = $(`<button>${i}</button>`);
