@@ -340,11 +340,10 @@ function handleMouse(e){
         return;
     }
 
-    let inp = document.createElement('input');
-    inp.setAttribute('type', 'text');
-    this.appendChild(inp);
+    let inp = $("<input type='number' autofocus>");
+    $(this).append(inp);
+    inp.trigger('focus');
     inp.focus();
-    setTimeout(() => {this.removeChild(inp)}, 1000);
     //Posição X dentro do objeto
     let x = e.layerX; 
     //Posição Y dentro do objeto
