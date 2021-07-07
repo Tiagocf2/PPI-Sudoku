@@ -390,9 +390,7 @@ $(document).ready(function(){
     $("#botao1").click(function(){
         $("#texto1").slideToggle("slow");
     });
-});
-
-$(document).ready(function(){
+    
     $("#botao2").click(function(){
         $("#texto2").slideToggle("slow");
     });
