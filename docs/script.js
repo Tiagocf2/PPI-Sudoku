@@ -344,6 +344,7 @@ function handleMouse(e){
     $(this).append(inp);
     inp.trigger('focus');
     inp.focus();
+    $(this).focus();
     //Posição X dentro do objeto
     let x = e.layerX; 
     //Posição Y dentro do objeto
