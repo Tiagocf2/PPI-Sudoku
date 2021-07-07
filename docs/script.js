@@ -398,9 +398,10 @@ $(document).ready(function(){
         setTimeout(() => {
             if(confirm("Deseja realmente terminar o jogo?")){          
                 sudoku.finishGame();
+                ev.target.disabled = true;
             }
         }, 150);
-        ev.target.disabled = true;
+        
     });
 
     $('#exportar').click(function(ev){
