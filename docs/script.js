@@ -103,7 +103,7 @@ class Sudoku{
         }
 
         /*Sudoku Grid*/
-        for(let i = 1; i < this.boardSize; i++){
+        for(let i = 0; i <= this.boardSize; i++){
             ctx.beginPath();
             ctx.strokeStyle = this.GRID_COLOR;
             ctx.lineWidth = 1;
@@ -123,15 +123,17 @@ class Sudoku{
 
         /*Numbers*/
         let offset = step / 2;
+        ctx.beginPath();
         ctx.font = `${this.FONT_SIZE} ${this.FONT_FAMILY}`;
         ctx.textAlign = 'center';
+        ctx.strokeStyle = this.FONT_COLOR;
+        ctx.lineWidth = 1;
         for(let y = 0; y < this.boardSize; y++){
             for(let x = 0; x < this.boardSize; x++){
                 let text = this.board[y][x];
                 //Se o quadrado não estiver vazio
                 if(text){ 
-                    ctx.beginPath();
-                    ctx.strokeStyle = this.FONT_COLOR;
+                    
                     //Faz a medição do texto
                     let metrics = ctx.measureText(text);
                     /*Calcula a altura do texto, somando a distancia da baseline do texto até o topo com a distancia até em baixo. 
@@ -390,9 +392,16 @@ $(document).ready(function(){
     $("#botao1").click(function(){
         $("#texto1").slideToggle("slow");
     });
-    
+
     $("#botao2").click(function(){
         $("#texto2").slideToggle("slow");
     });
-});
 
+    $('#exportar').click(function(ev){
+        let img = sudoku.exportAsImage();
+        let download = document.createElement('a');
+        download.href = img;
+        download.download = "meu_sudoku.png";
+        download.click();
+    });
+});
