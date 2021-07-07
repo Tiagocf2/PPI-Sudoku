@@ -350,6 +350,7 @@ function handleMouse(e){
     y = Math.floor(y / tamanho);
     
     this.sudoku.select(x, y);
+    this.sudoku.lastSelection = {x: x, y: y};
 }
 
 function handleKeyboard(e){
@@ -412,6 +413,7 @@ $(document).ready(function(){
         for(let i = 1; i <= 9; i++){
             let btn = $(`<button>${i}</button>`);
             btn.on('click', ()=>{
+                sudoku.select(sudoku.lastSelection.x, sudoku.lastSelection.y);
                 sudoku.inputNumber(i);
             });
             keydiv.append(btn);
