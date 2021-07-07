@@ -340,12 +340,6 @@ function handleMouse(e){
         return;
     }
 
-    let inp = $("<input type='number' autofocus>");
-    $(this).append(inp);
-    inp.trigger('focus');
-    inp.focus();
-    $(this).trigger('focus');
-    $(this).focus();
     //Posição X dentro do objeto
     let x = e.layerX; 
     //Posição Y dentro do objeto
@@ -354,8 +348,18 @@ function handleMouse(e){
     let tamanho = this.sudoku.size / this.sudoku.boardSize; 
     x = Math.floor(x / tamanho); //Floor -> remove casas decimais
     y = Math.floor(y / tamanho);
-
+    
     this.sudoku.select(x, y);
+    
+    let inp = $("<input type='number' autofocus>");
+    inp.on('input', () => {
+        let num = $('this').val();
+        $('this').val(null);
+        this.sudoku.inputNumber(num);
+    });
+    $(this).append(inp);
+    inp.trigger('focus');
+    inp.focus();
 }
 
 function handleKeyboard(e){
