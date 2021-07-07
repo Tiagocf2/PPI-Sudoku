@@ -405,4 +405,16 @@ $(document).ready(function(){
         download.download = "meu_sudoku.png";
         download.click();
     });
+
+    let isMobile = /Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if(isMobile) {
+        let keydiv = $('#mobile_keyboard');
+        for(let i = 1; i <= 9; i++){
+            let btn = $(`<button>${i}</button>`);
+            btn.on('click', ()=>{
+                sudoku.inputNumber(i);
+            });
+            keydiv.append(btn);
+        }    
+    }
 });
