@@ -339,6 +339,9 @@ function handleMouse(e){
     if(this.sudoku.gameFinished){
         return;
     }
+
+    this.focus();
+    
     //Posição X dentro do objeto
     let x = e.layerX; 
     //Posição Y dentro do objeto
