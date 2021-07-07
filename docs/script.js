@@ -340,8 +340,11 @@ function handleMouse(e){
         return;
     }
 
-    document.createElement('input').focus();
-
+    let inp = document.createElement('input');
+    inp.setAttribute('type', 'text');
+    this.appendChild(inp);
+    inp.focus();
+    setTimeout(() => {this.removeChild(inp)}, 1000);
     //Posição X dentro do objeto
     let x = e.layerX; 
     //Posição Y dentro do objeto
