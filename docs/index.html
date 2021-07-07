@@ -5,6 +5,7 @@
 		<meta charset="utf-8">
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<script type="text/javascript" src="script.js" defer ></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	</head>
 	<body>
 		<header>
@@ -16,47 +17,51 @@
 		</header>
 		<br>
 		<canvas id="sudoku-canvas"> </canvas>
+		<br><br>
 
-		<section id="instructions">
-			<h3>Instruções</h3>
-			<h4>Controles:</h4>
-			<p>Utilize o <b>mouse</b> ou as <b>setas do teclado</b> para selecionar um quadrado.</p>
-			<p>Com o quadrado selecionado utilize as teclas de <b>1 a 9</b> para o número desejado.</p>
-			<h4>Como Jogar:</h4>
-			<p>Dado o tabuleiro inicial, você deve conseguir preencher todos os quadrados com <b>números de 1 a 9</b>, de modo que:</p>
-			<ol>
-				<li><b>Não</b> haja números <b>repetidos</b> nas linha.</li>
-				<li><b>Não</b> haja números <b>repetidos</b> nas colunas.</li>
-				<li><b>Não</b> haja números <b>repetidos</b> nos quadrados maiores.</li>
-			</ol>
-			<p>Boa sorte!</p>
+		<section>
+			<button onclick="slidedown()" id="botao1">Clique aqui para mais instruções</button>
+			<div id="texto1">
+				<h3>Instruções:</h3>
+				<h4>Controles:</h4>
+				<p>Utilize o <b>mouse</b> ou as <b>setas do teclado</b> para selecionar um quadrado.</p>
+				<p>Com o quadrado selecionado utilize as teclas de <b>1 a 9</b> para o número desejado.</p>
+				<h4>Como Jogar:</h4>
+				<p>Dado o tabuleiro inicial, você deve conseguir preencher todos os quadrados com <b>números de 1 a 9</b>, de modo que:</p>
+				<ol>
+					<li><b>Não</b> haja números <b>repetidos</b> nas linha.</li>
+					<li><b>Não</b> haja números <b>repetidos</b> nas colunas.</li>
+					<li><b>Não</b> haja números <b>repetidos</b> nos quadrados maiores.</li>
+				</ol>
+				<p>Boa sorte!</p>
+			</div>
 		</section>
-
-		<section id="about">
-			<h3>Sobre Nós</h3>
-			<div class="wrapper">
+		<br><br>
+		<section id="sobre_nos">
+			<button id="botao2">Sobre nós</button>
+			<div id="texto2">
+			<h3>Sobre Nós:</h3>
+			<div class="nik">
 				<div class="image">
-					<!-- img src="foto da nik" -->
+					<img src="img/foto_da_nik.png">
 					<h4>Nikolle de Lacerda Nascimento</h4>
+					</div>
+					<div class="content">
+						<span>Front-end + gerar e testar o jogo</span>
+					</div>
 				</div>
-				<div class="content">
-					<span>A linda responsável pelo front-end da página!</span>
-				</div>
-			</div>
 
-			<div class="wrapper">
+			<div class="tiago">
 				<div class="image">
-					<!-- img src="foto do tiago" -->
-					<h4>Tiago Civatti Frausino</h4>
+				<img src="img/foto_do_tiago.png">
+				<h4>Tiago Civatti Frausino</h4>
 				</div>
-				<div class="content">
-					<span>Responsável pelo back-end exagerado do Sudoku!</span>
+					<div class="content">
+						<span>Textos do front-end + tabuleiro sudoku e terminar jogo</span>
+					</div>
 				</div>
 			</div>
 		</section>
-
-		<footer>
-			<p>Feito por NIK's CORP.</p>
-		</footer>
+		<br><br>
 	</body>
-</html>  
+</html>

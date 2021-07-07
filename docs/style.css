@@ -59,4 +59,38 @@ canvas{
     display: inline-block;
 }
 
+#texto1, #texto2{
+	display:none;
+	border-radius: 12px;
+	background:#a7a8ab;
+	font-family: 'High Tower Text';
+	font-size: 15px;
+	font-weight: bold;
+	color:#3b4657;
+	padding:25px;
+	width: 70%;
+}
 
+section{
+	display: flex;
+	width:1000px;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+section button{
+	margin-bottom: 25px;
+}
+
+img{
+	width: 100px;
+	height: 100px;
+	clip-path: circle(50%);
+}
+.nik{
+	float: left;
+}
+.tiago{
+	float: right;
+}

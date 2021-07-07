@@ -8,9 +8,15 @@ window.onload = function(){
     sudoku = new Sudoku(canvas);
 };
 
-
+//CLASSE DO TABULEIRO DE SUDOKU 
 class Sudoku{
-    constructor(elemento_HTML, size = 500, boardSize = 9){
+/*
+elemento_HTML : variavel que faz referencia ao elemento do HTML;
+size : tamanho do canvas;
+boardSize : tamanho do tabuleiro.
+*/
+
+    constructor(elemento_HTML, size = 500, boardSize = 9){ 
         /*CONSTANTES*/
         this.SELECTED_COLOR = '#ccc';
         this.BACKGROUND_COLOR = '#fff';
@@ -19,49 +25,50 @@ class Sudoku{
         this.FONT_FAMILY = 'arial';
 
         this.canvas = elemento_HTML; //Referencia do elemento
-        this.canvas.sudoku = this; //Linkando objeto com a classe
+        this.canvas.sudoku = this;   //Linkando objeto com a classe
         this.size = size;
         this.boardSize = boardSize;
-        this.board = undefined;
+        this.board = undefined; 
+        this.selected = undefined;
 
-        this.canvas.tabIndex = 1; //Faz o elemento ser focável
-        this.canvas.addEventListener('focusout', unfocus);
-        this.canvas.addEventListener('mouseup', handleMouse);
-        this.canvas.addEventListener('keydown', handleKeyboard);
+        this.canvas.tabIndex = 1; //Faz o elemento ser focável com tab
+        this.canvas.addEventListener('focusout', unfocus); //quando perde o foco anula a seleção do quadrado
+        this.canvas.addEventListener('mouseup', handleMouse); 
+        this.canvas.addEventListener('keydown', handleKeyboard); 
 
         this.initBoard();
     }
 
+    /*Inicializa o Array do tabuleiro*/
     initBoard(){
-        /*Inicializa o Array do tabuleiro*/
-        this.board = [];
-        for(let i = 0; i < this.boardSize; i++){
-            let row = [];
+        this.board = []; //cria um vetor
+        for(let i = 0; i < this.boardSize; i++){ 
+            let row = []; //cria "boardSize" linhas
             for(let j = 0; j < this.boardSize; j++){
-                row.push(undefined);
+                row.push(undefined); //adiciona "boardSize" elementos na linha
             }
-            this.board.push(row);
+            this.board.push(row); //adiciona a linha no vetor
         }
 
         this.canvas.width = this.size;
         this.canvas.height = this.size;
         this.drawBoard();
     }
-
+    /*DESENHA O TABULEIRO*/
     drawBoard(){
         let step = this.size/this.boardSize; //Tamanho do quadrado
-        let ctx = this.canvas.getContext('2d');
+        let ctx = this.canvas.getContext('2d'); 
         
         /* Clear Canvas */
-        this.resetBoard();
+        this.clearBoard();
 
         /*Selected Square*/
         if(this.selected){
-            ctx.beginPath();
+            ctx.beginPath(); //começa um novo desenho
             let x = this.selected.x;
             let y = this.selected.y;
             ctx.fillStyle = this.SELECTED_COLOR;
-            ctx.fillRect(x * step, y * step, step, step);
+            ctx.fillRect(x * step, y * step, step, step); //preenche um retangulo na posição x y com largura e altura
             ctx.stroke(); //comando para preencher
         }
 
@@ -73,11 +80,11 @@ class Sudoku{
             if(i % 3 == 0){ //Linha grossa
                 ctx.lineWidth = 4;
             }
-
+            //linha vertical
             ctx.moveTo(step * i, 0);
             ctx.lineTo(step * i, this.size);
             ctx.stroke();
-
+            //linha horizontal
             ctx.moveTo(0, step * i);
             ctx.lineTo(this.size, step * i);
             ctx.stroke();
@@ -95,8 +102,8 @@ class Sudoku{
                     ctx.beginPath();
                     //Faz a medição do texto
                     let metrics = ctx.measureText(text);
-                    /*Calcula a altura do texto, somando a distancia da baseline do texto até o topo com a distancia até em baixo. 
-                    Depois divide por 2 para pegar o meio do texto.*/
+                    /*Calcula a altura do texto, somando a distancia da baseline do texto até o topo com
+                    a distancia até em baixo. Depois divide por 2 para pegar o meio do texto.*/
                     let textOffset = (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent) / 2;
                     ctx.strokeText(this.board[y][x], x * step + offset, y * step + offset + textOffset);
                 }
@@ -105,7 +112,7 @@ class Sudoku{
 
     }  
 
-    resetBoard(){
+    clearBoard(){
         /* Clear Canvas */
         let ctx = this.canvas.getContext('2d');
         ctx.beginPath();
@@ -114,7 +121,7 @@ class Sudoku{
     }
 
     select(x, y){
-        x = (this.boardSize + x) * (x < 0) + (x % this.boardSize) * (x > 0);
+        x = (this.boardSize + x) * (x < 0) + (x % this.boardSize) * (x > 0); //se exceder o tabuleiro +/- vai pro ultimo/primeiro quadrado
         y = (this.boardSize + y) * (y < 0) + (y % this.boardSize) * (y > 0);
         this.selected = {"x": x, "y": y};
 
@@ -185,24 +192,24 @@ class Sudoku{
         this.board[y][x] = undefined;
         return isValid;
     }
-
-    checkLine(x, y, vertical = false, ignoreUndefined = false){
+ 
+    checkLine(x, y, vertical = false, ignoreUndefined = false){ //ignoreUndefined -> "ignorar os vazios ou n?"
         if(!this.board[y][x] && !ignoreUndefined){
             return false;
         }
 
         for(let i = 0; i < this.boardSize; i++){
-            let _y = (y * !vertical) + (vertical * i);
-            let _x = (x * vertical) + (!vertical * i);
-            if(_y == y && _x == x){
+            let _y = (y * !vertical) + (vertical * i); //vertical false  (y n muda) + vertical true (y muda)
+            let _x = (x * vertical) + (!vertical * i); //vertical true (x n muda) + vertical false (x muda)
+            if(_y == y && _x == x){ //n precisa checar
                 continue;
             }
 
-            if(!this.board[_y][_x] && !ignoreUndefined){
+            if(!this.board[_y][_x] && !ignoreUndefined){ //quadrados vazios
                 return false;
             }
 
-            if(this.board[_y][_x] == this.board[y][x]){
+            if(this.board[_y][_x] == this.board[y][x]){ //num repetido
                 return false;
             }
         }
@@ -216,9 +223,9 @@ class Sudoku{
         }
 
         let sqrSize = this.boardSize / 3;
-        let sqrX = Math.floor(x / sqrSize);
+        let sqrX = Math.floor(x / sqrSize); //1o quadrado
         let sqrY = Math.floor(y / sqrSize);
-        let sqrMaxX = sqrSize * (sqrX + 1);
+        let sqrMaxX = sqrSize * (sqrX + 1); //ultimo quadrado
         let sqrMaxY = sqrSize * (sqrY + 1);
 
         for(let sy = sqrY * sqrSize; sy < sqrMaxY; sy++){
@@ -237,7 +244,7 @@ class Sudoku{
         return true;
     }
     gerarTabuleiro(){
-        let numeros = [1,2,3,4,5,6,7,8,9];
+        let sudoku1 = [];
         let n = 0;
 
         for(let i = 0; i <= 9; i++){
@@ -324,7 +331,19 @@ function handleKeyboard(e){
 
     if(key == 'ArrowDown'){
         this.sudoku.select(this.sudoku.selected.x, this.sudoku.selected.y+1);
-        return false;
     }
 }
 
+//PARTE DE INSTRUÇÕES E "SOBRE NÓS"
+
+$(document).ready(function(){
+    $("#botao1").click(function(){
+        $("#texto1").slideToggle("slow");
+    });
+});
+
+$(document).ready(function(){
+    $("#botao2").click(function(){
+        $("#texto2").slideToggle("slow");
+    });
+});
