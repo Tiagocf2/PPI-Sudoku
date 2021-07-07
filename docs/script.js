@@ -4,16 +4,8 @@ let canvas; //objeto
 
 /* INICIALIZAÇÃO */
 window.onload = function(){
-    let btn_finish = document.getElementById("terminar_jogo");
     canvas = document.getElementById("sudoku-canvas");
     sudoku = new Sudoku(canvas);
-
-    btn_finish.addEventListener('click', ()=>{
-        if(confirm("Deseja realmente terminar o jogo?")){
-            sudoku.finishGame();
-        }
-    });
-
 };
 
 
@@ -300,6 +292,9 @@ class Sudoku{
     }
 
     finishGame(){
+        if(this.gameFinished){
+            return false;
+        }
         this.checkBoard();
 
         this.selected = undefined;
@@ -397,6 +392,15 @@ $(document).ready(function(){
 
     $("#botao2").click(function(){
         $("#texto2").slideToggle("slow");
+    });
+
+    $('#terminar_jogo').on('click', (ev)=>{
+        setTimeout(() => {
+            if(confirm("Deseja realmente terminar o jogo?")){          
+                sudoku.finishGame();
+            }
+        }, 150);
+        ev.target.disabled = true;
     });
 
     $('#exportar').click(function(ev){

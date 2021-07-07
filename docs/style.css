@@ -82,11 +82,13 @@ button:hover{
 	background: #ddd;
 }
 
-button:active {
+button:active, button:disabled {
   background-color:#999;
   box-shadow: 0 0px #999;
   transform: translate(0, 9px);
 }
+
+
 
 canvas{
     outline: 4px solid black;
