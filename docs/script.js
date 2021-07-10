@@ -29,32 +29,85 @@ class Sudoku{
         this.size = size;
         this.boardSize = boardSize;
         this.board = undefined;
-        this.gameFinished = undefined;
+        this.gameFinished = false;
 
         this.canvas.tabIndex = 1; //Faz o elemento ser focável
         this.canvas.addEventListener('focusout', unfocus);
         this.canvas.addEventListener('mouseup', handleMouse);
         this.canvas.addEventListener('keydown', handleKeyboard);
 
-        this.initBoard();
+        /* Determina as dimensões do Canvas */
+        /*  (Impossível determinar por CSS) */
+        this.canvas.width = this.size;
+        this.canvas.height = this.size;
+
         this.criarNovoJogo();
     }
 
-    initBoard(){
-        /*Inicializa o Array do tabuleiro*/
-        this.board = [];
+    criarNovoJogo(){
+        let tabuleiro1 = [
+        [5   ,3   ,null,null,7   ,null,null,null,null],
+        [6   ,null,null,1   ,9   ,5   ,null,null,null],
+        [null,9   ,8   ,null,null,null,null,6   ,null],
+        [8   ,null,null,null,6   ,null,null,null,3   ],
+        [4   ,null,null,8   ,null,3   ,null,null,1   ],
+        [7   ,null,null,null,2   ,null,null,null,6   ],
+        [null,6   ,null,null,null,null,2   ,8   ,null],
+        [null,null,null,4   ,1   ,9   ,null,null,5   ],
+        [null,null,null,null,8   ,null,null,7   ,9   ]   
+        ];
+
+        let tabuleiro2 = [
+        [8   ,null,null,4   ,null,6   ,null,null,7   ],
+        [null,null,null,null,null,null,4   ,null,null],
+        [null,1   ,null,null,null,null,6   ,5   ,null],
+        [5   ,null,9   ,null,3   ,null,7   ,8   ,null],
+        [null,null,null,null,7   ,null,null,null,null],
+        [null,4   ,8   ,null,2   ,null,1   ,null,3   ],
+        [null,5   ,2   ,null,null,null,null,9   ,null],
+        [null,null,1   ,null,null,null,null,null,null],
+        [3   ,null,null,9   ,null,2   ,null,null,5   ]   
+        ]
+
+        let tabuleiro3 = [
+        [8   ,null,null,null,null,null,null,null,null],
+        [null,null,3   ,6   ,null,null,null,null,null],
+        [null,7   ,null,null,9   ,null,2   ,null,null],
+        [null,5   ,null,null,null,7   ,null,null,null],
+        [null,null,null,null,4   ,5   ,7   ,null,null],
+        [null,null,null,1   ,null,null,null,3   ,null],
+        [null,null,1   ,null,null,null,null,6   ,8   ],
+        [null,null,8   ,5   ,null,null,null,1   ,null],
+        [null,9   ,null,null,null,null,4   ,null,null]   
+        ] 
+
+        let tabuleiros = [];
+        tabuleiros.push(tabuleiro1);
+        tabuleiros.push(tabuleiro2);
+        tabuleiros.push(tabuleiro3);
+
+        let randomTabuleiro = tabuleiros[Math.floor(Math.random() * tabuleiros.length)];
+
+        this.boardInitial = [];
         this.boardResult = [];
+        this.board = [];
+
         for(let i = 0; i < this.boardSize; i++){
-            let row = [];
+            let initial_row = [];
+            let result_row = [];
+            let board_row = [];
             for(let j = 0; j < this.boardSize; j++){
-                row.push(undefined);
+                result_row.push(undefined);
+                board_row.push(randomTabuleiro[i][j]);
+                initial_row.push(randomTabuleiro[i][j]);
             }
-            this.board.push(row);
-            this.boardResult.push(Array.from(row));
+            this.boardResult.push(result_row);
+            this.boardInitial.push(initial_row);
+            this.board.push(board_row);
         }
 
-        this.canvas.width = this.size;
-        this.canvas.height = this.size;
+        this.selected = undefined;
+        this.gameFinished = false;
         this.drawBoard();
     }
 
@@ -63,7 +116,9 @@ class Sudoku{
         let ctx = this.canvas.getContext('2d');
         
         /* Clear Canvas */
-        this.resetBoard();
+        ctx.beginPath();
+        ctx.fillStyle = this.BACKGROUND_COLOR;
+        ctx.fillRect(0, 0, this.size, this.size);
 
         /*Selected Square*/
         if(this.selected){
@@ -146,17 +201,9 @@ class Sudoku{
             ctx.globalAlpha = 0.25;
             ctx.fillStyle = this.FINISHED_FOREGROUND_COLOR;
             ctx.fillRect(0, 0, this.size, this.size);
-            ctx.restore();            
+            ctx.globalAlpha = 1;            
         }
     }  
-
-    resetBoard(){
-        /* Clear Canvas */
-        let ctx = this.canvas.getContext('2d');
-        ctx.beginPath();
-        ctx.fillStyle = this.BACKGROUND_COLOR;
-        ctx.fillRect(0, 0, this.size, this.size);
-    }
 
     select(x, y){
         x = (this.boardSize + x) * (x < 0) + (x % this.boardSize) * (x > 0);
@@ -202,18 +249,6 @@ class Sudoku{
         this.checkLine(x, y);       //Linha horizontal
         this.checkSquare(x, y);     //Quadrado grande
     }
-
-    /*isNumberValidAt(num, x, y){
-        //console.log(this.board[y][x]);
-        if(this.board[y][x]){
-            return false;
-        }
-        this.board[y][x] = num;
-        let isValid = this.checkNumber(x, y, true);
-        //console.log(this.board[y][x], isValid);
-        this.board[y][x] = undefined;
-        return isValid;
-    }*/
 
     checkLine(x, y, vertical = false){
         if(!this.board[y][x]){
@@ -263,55 +298,6 @@ class Sudoku{
             }
         }
         this.boardResult[y][x] = this.BOARD_RIGHT;
-    }
-
-    criarNovoJogo(){
-        let tabuleiro1 = [
-        [5   ,3   ,null,null,7   ,null,null,null,null],
-        [6   ,null,null,1   ,9   ,6   ,null,null,null],
-        [null,9   ,8   ,null,null,null,null,6   ,null],
-        [8   ,null,null,null,6   ,null,null,null,3   ],
-        [4   ,null,null,8   ,null,3   ,null,null,1   ],
-        [7   ,null,null,null,2   ,null,null,null,6   ],
-        [null,6   ,null,null,null,null,2   ,8   ,null],
-        [null,null,null,4   ,1   ,9   ,null,null,5   ],
-        [null,null,null,null,8   ,null,null,7   ,9   ]   
-        ];
-
-        let tabuleiro2 = [
-        [8   ,null,null,4   ,null,6   ,null,null,7   ],
-        [null,null,null,null,null,null,4   ,null,null],
-        [null,1   ,null,null,null,null,6   ,5   ,null],
-        [5   ,null,9   ,null,3   ,null,7   ,8   ,null],
-        [null,null,null,null,7   ,null,null,null,null],
-        [null,4   ,8   ,null,2   ,null,1   ,null,3   ],
-        [null,5   ,2   ,null,null,null,null,9   ,null],
-        [null,null,1   ,null,null,null,null,null,null],
-        [3   ,null,null,9   ,null,2   ,null,null,5   ]   
-        ]
-
-        let tabuleiro3 = [
-        [8   ,null,null,null,null,null,null,null,null],
-        [null,null,3   ,6   ,null,null,null,null,null],
-        [null,7   ,null,null,9   ,null,2   ,null,null],
-        [null,5   ,null,null,null,7   ,null,null,null],
-        [null,null,null,null,4   ,5   ,7   ,null,null],
-        [null,null,null,1   ,null,null,null,3   ,null],
-        [null,null,1   ,null,null,null,null,6   ,8   ],
-        [null,null,8   ,5   ,null,null,null,1   ,null],
-        [null,9   ,null,null,null,null,4   ,null,null]   
-        ] 
-
-        let tabuleiros = [];
-        tabuleiros.push(tabuleiro1);
-        tabuleiros.push(tabuleiro2);
-        tabuleiros.push(tabuleiro3);
-
-        let randomTabuleiros = Array.from(tabuleiros[Math.floor(Math.random() * 3)]);
-
-        this.boardInitial = Array.from(randomTabuleiros);
-        this.board = randomTabuleiros;
-        this.drawBoard();
     }
 
     generateTestBoard(){
@@ -419,12 +405,23 @@ function handleKeyboard(e){
 
 //PARTE DE INSTRUÇÕES E "SOBRE NÓS"
 $(document).ready(function(){
+    
     $("#botao1").click(function(){
         $("#texto1").slideToggle("slow");
     });
-
+    
     $("#botao2").click(function(){
         $("#texto2").slideToggle("slow");
+    });
+
+    $("#novo_jogo").on('click', function(){
+        setTimeout(() => {
+            if(confirm("Deseja realmente começar um Novo jogo?\nIsso apagará todo seu progresso atual.")){
+                sudoku.criarNovoJogo();
+                $('#terminar_jogo')[0].disabled = false;
+            }
+        },150);
+        
     });
 
     $('#terminar_jogo').on('click', (ev)=>{
@@ -448,6 +445,7 @@ $(document).ready(function(){
     let isMobile = /Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     if(isMobile) {
         let keydiv = $('#mobile_keyboard');
+        /* Botoes de 1 a 9 */
         for(let i = 1; i <= 9; i++){
             let btn = $(`<button>${i}</button>`);
             btn.on('click', ()=>{
@@ -455,8 +453,14 @@ $(document).ready(function(){
                 sudoku.inputNumber(i);
             });
             keydiv.append(btn);
-        }    
+            
+        }
+        /* Botao de apagar */
+        let btn = $(`<button>&#x2421;</button>`);
+        btn.on('click', ()=>{
+            sudoku.select(sudoku.lastSelection.x, sudoku.lastSelection.y);
+            sudoku.inputNumber(null);
+        });
+        keydiv.append(btn);
     }
-
-   //$("#novo_jogo").on("click",sudoku.criarNovoJogo);
 });

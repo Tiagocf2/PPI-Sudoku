@@ -95,6 +95,11 @@ canvas{
     display: inline-block;
 	margin-bottom: 3%;
 }
+
+#mobile_keyboard{
+
+}
+
 #exportar{
 	display: flex;
 	position: relative;
