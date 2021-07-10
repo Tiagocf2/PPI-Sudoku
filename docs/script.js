@@ -37,6 +37,7 @@ class Sudoku{
         this.canvas.addEventListener('keydown', handleKeyboard);
 
         this.initBoard();
+        this.criarNovoJogo();
     }
 
     initBoard(){
@@ -119,6 +120,7 @@ class Sudoku{
         ctx.font = `${this.FONT_SIZE} ${this.FONT_FAMILY}`;
         ctx.textAlign = 'center';
         ctx.strokeStyle = this.FONT_COLOR;
+        ctx.fillStyle = this.FONT_COLOR;
         ctx.lineWidth = 1;
         for(let y = 0; y < this.boardSize; y++){
             for(let x = 0; x < this.boardSize; x++){
@@ -131,7 +133,11 @@ class Sudoku{
                     /*Calcula a altura do texto, somando a distancia da baseline do texto até o topo com a distancia até em baixo. 
                     Depois divide por 2 para pegar o meio do texto.*/
                     let textOffset = (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent) / 2;
-                    ctx.strokeText(this.board[y][x], x * step + offset, y * step + offset + textOffset);
+                    if(this.boardInitial[y][x] != null){
+                        ctx.fillText(this.board[y][x], x * step + offset, y * step + offset + textOffset);
+                    }else{
+                        ctx.strokeText(this.board[y][x], x * step + offset, y * step + offset + textOffset);
+                    }
                 }
             }
         }
@@ -170,15 +176,10 @@ class Sudoku{
         if(!this.selected){
             return;
         }
-        this.board[this.selected.y][this.selected.x] = n;
-        this.drawBoard();
-    }
-
-    removeNumber(){
-        if(!this.selected){
+        if(this.boardInitial[this.selected.y][this.selected.x] != null){
             return;
         }
-        this.board[this.selected.y][this.selected.x] = undefined;
+        this.board[this.selected.y][this.selected.x] = n;
         this.drawBoard();
     }
 
@@ -264,22 +265,54 @@ class Sudoku{
         this.boardResult[y][x] = this.BOARD_RIGHT;
     }
 
-    /*gerarTabuleiro(){
-        let numeros = [1,2,3,4,5,6,7,8,9];
-        let n = 0;
+    criarNovoJogo(){
+        let tabuleiro1 = [
+        [5   ,3   ,null,null,7   ,null,null,null,null],
+        [6   ,null,null,1   ,9   ,6   ,null,null,null],
+        [null,9   ,8   ,null,null,null,null,6   ,null],
+        [8   ,null,null,null,6   ,null,null,null,3   ],
+        [4   ,null,null,8   ,null,3   ,null,null,1   ],
+        [7   ,null,null,null,2   ,null,null,null,6   ],
+        [null,6   ,null,null,null,null,2   ,8   ,null],
+        [null,null,null,4   ,1   ,9   ,null,null,5   ],
+        [null,null,null,null,8   ,null,null,7   ,9   ]   
+        ];
 
-        for(let i = 0; i <= 9; i++){
-            let aleatorio = Math.floor(Math.random()*9);
-            let aleatorioX = Math.floor(Math.random()*9);
-            let aleatorioY = Math.floor(Math.random()*9);
-            if(this.isNumberValidAt(numeros[aleatorio],aleatorioX,aleatorioY)){
-                this.board[aleatorioY][aleatorioX] = numeros[aleatorio];
-                n++;
-            }
-        }
-        //this.drawBoard();
-        return n;
-    }*/
+        let tabuleiro2 = [
+        [8   ,null,null,4   ,null,6   ,null,null,7   ],
+        [null,null,null,null,null,null,4   ,null,null],
+        [null,1   ,null,null,null,null,6   ,5   ,null],
+        [5   ,null,9   ,null,3   ,null,7   ,8   ,null],
+        [null,null,null,null,7   ,null,null,null,null],
+        [null,4   ,8   ,null,2   ,null,1   ,null,3   ],
+        [null,5   ,2   ,null,null,null,null,9   ,null],
+        [null,null,1   ,null,null,null,null,null,null],
+        [3   ,null,null,9   ,null,2   ,null,null,5   ]   
+        ]
+
+        let tabuleiro3 = [
+        [8   ,null,null,null,null,null,null,null,null],
+        [null,null,3   ,6   ,null,null,null,null,null],
+        [null,7   ,null,null,9   ,null,2   ,null,null],
+        [null,5   ,null,null,null,7   ,null,null,null],
+        [null,null,null,null,4   ,5   ,7   ,null,null],
+        [null,null,null,1   ,null,null,null,3   ,null],
+        [null,null,1   ,null,null,null,null,6   ,8   ],
+        [null,null,8   ,5   ,null,null,null,1   ,null],
+        [null,9   ,null,null,null,null,4   ,null,null]   
+        ] 
+
+        let tabuleiros = [];
+        tabuleiros.push(tabuleiro1);
+        tabuleiros.push(tabuleiro2);
+        tabuleiros.push(tabuleiro3);
+
+        let randomTabuleiros = Array.from(tabuleiros[Math.floor(Math.random() * 3)]);
+
+        this.boardInitial = Array.from(randomTabuleiros);
+        this.board = randomTabuleiros;
+        this.drawBoard();
+    }
 
     generateTestBoard(){
         for(let y = 0; y < this.boardSize; y++){
@@ -355,7 +388,7 @@ function handleKeyboard(e){
 
     //Impede o input do teclado de afetar a página
     e.preventDefault(); 
-
+    
     let key = e.key;
 
     //Numeros 1 ate 9
@@ -366,7 +399,7 @@ function handleKeyboard(e){
 
     //Backspace
     if(key == 'Backspace'){
-        this.sudoku.removeNumber();
+        this.sudoku.inputNumber(null);
     }
 
     if(key == 'ArrowRight'){
@@ -424,4 +457,6 @@ $(document).ready(function(){
             keydiv.append(btn);
         }    
     }
+
+   //$("#novo_jogo").on("click",sudoku.criarNovoJogo);
 });
