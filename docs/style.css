@@ -1,15 +1,11 @@
 *{
 	margin: 0;
 	padding: 0;
-	box-sizing: content-box;
-}
-
-html, body{
-	min-height: 100vh;
+	box-sizing: border-box;
 }
 
 body{
-	width: 100%;
+	min-height: 100vh;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -34,7 +30,7 @@ h1{
 
 section{
 	display: flex;
-	width:1000px;
+	width: 50%;
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
@@ -78,6 +74,10 @@ button{
 	transition: all 0.15s ease;
 }
 
+button::selection{
+	background: none;
+}
+
 button:hover{
 	background: #ddd;
 }
@@ -91,14 +91,26 @@ button:active, button:disabled {
 
 
 canvas{
+	width: auto;
     outline: 4px solid black;
     display: inline-block;
 	margin-bottom: 3%;
 }
 
 #mobile_keyboard{
-
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	width: 80%;
 }
+#mobile_keyboard *{
+	width: 28%;
+	margin: 0 2.5%;
+	margin-bottom: 0.75em;
+	font-size: 2em;
+}
+
 
 #exportar{
 	display: flex;
@@ -141,10 +153,24 @@ h3{
 	font-size: 1.5rem;
 }
 
+#texto1 img{
+	width: 2.5rem;
+	vertical-align: middle;
+	padding: 0.2rem;
+}
+
 #texto1 h4{
 	margin-top: 1em;
 	margin-bottom: 0.25em;
 	margin-left: 1em;
+}
+#texto1 ul{
+	padding-left: 8%;
+	margin: 0.5em;
+	list-style: none;
+}
+#texto1 ul li{
+	margin-bottom: 0.5em;
 }
 
 #texto1 ol{
@@ -179,16 +205,16 @@ h3{
 	padding-top: 5%;
 }
 
-.content{
-	font-size:  1.05rem !important;
-}
-
-img{
+.image img{
 	width: 150px;
 	border-radius: 50%;
 	border: 0.125em solid #3b4657;
 	box-shadow: 0 0 0 0.25em white,
-			0 0 0 0.375em #3b4657;
+	0 0 0 0.375em #3b4657;
+}
+
+.content{
+	font-size:  1.05rem !important;
 }
 
 footer{
@@ -200,6 +226,27 @@ footer{
 	padding: 1em;
 	background-color: #ddd;
 	font-family: Arial, 'sans serif';
-	font-size: 0.8rem;
+	font-size: 0.8em;
 	color:#3b4657;
+
+	margin-top: auto;
+}
+
+@media only screen and (max-width: 800px), 
+	only screen and (max-device-width: 1024px){
+	section{
+		width: 90% !important;
+	}
+
+	#sudoku canvas{
+		width: 100% !important;
+	}
+
+	h1{
+		font-size: 4.5em !important;
+	}
+
+	#texto1, #texto2{
+		width: 100%;
+	}
 }

@@ -359,7 +359,7 @@ function handleMouse(e){
     //Posição Y dentro do objeto
     let y = e.layerY; 
     //Tamanho de cada quadrado
-    let tamanho = this.sudoku.size / this.sudoku.boardSize; 
+    let tamanho = this.clientWidth / this.sudoku.boardSize; 
     x = Math.floor(x / tamanho); //Floor -> remove casas decimais
     y = Math.floor(y / tamanho);
     
