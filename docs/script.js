@@ -21,8 +21,6 @@ class Sudoku{
         this.FONT_COLOR = '#000';
         this.FONT_SIZE = '63px';
         this.FONT_FAMILY = 'arial';
-        this.BOARD_RIGHT = true;
-        this.BOARD_WRONG = false;
 
         this.canvas = elemento_HTML; //Referencia do elemento
         this.canvas.sudoku = this; //Linkando objeto com a classe
@@ -148,9 +146,17 @@ class Sudoku{
             ctx.stroke(); //comando para preencher
         }
         
+        /* Quando o jogo termina, colore os quadrados com verde ou vermelho
+        dependendo se estão certo ou errado. */
         if(this.gameFinished){
             for(let y = 0; y < this.boardSize; y++){
                 for(let x = 0; x < this.boardSize; x++){
+                    if(this.boardInitial[y][x]){
+                        continue;
+                    }
+                    if(this.boardResult[y][x] == null){
+                        continue;
+                    }
                     ctx.beginPath();
                     if(this.boardResult[y][x]){
                         ctx.fillStyle = this.RIGHT_COLOR;
@@ -259,17 +265,19 @@ class Sudoku{
     }
 
     checkNumber(x, y){
-        let ok = 
-            this.checkLine(x, y, true)  //Linha vertical
-            && this.checkLine(x, y)     //Linha horizontal
-            && this.checkSquare(x, y);  //Quadrado grande
-        this.boardResult[y][x] = ok;
+        let ok = this.checkLine(x, y, true)  //Linha vertical
+        let ok2 = this.checkLine(x, y)     //Linha horizontal
+        let ok3 = this.checkSquare(x, y);  //Quadrado grande
+        if(ok == null){
+            this.boardResult[y][x] = ok;
+        } else {
+            this.boardResult[y][x] = ok && ok2 && ok3;
+        }
     }
 
     checkLine(x, y, vertical = false){
         if(!this.board[y][x]){
-            this.boardResult[y][x] = null;
-            return false;
+            return null;
         }
 
         for(let i = 0; i < this.boardSize; i++){
@@ -289,8 +297,7 @@ class Sudoku{
 
     checkSquare(x, y){
         if(!this.board[y][x]){
-            this.boardResult[y][x] = null;
-            return false;
+            return null;
         }
 
         let sqrSize = this.boardSize / 3;
