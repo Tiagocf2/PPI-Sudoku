@@ -44,7 +44,9 @@ class Sudoku{
         this.criarNovoJogo();
     }
 
+    //cria diferentes tabuleiros e também randomiza eles ao click do botão "novo_jogo"
     criarNovoJogo(){
+        //tabuleiros
         let tabuleiro1 = [
         [5   ,3   ,null,null,7   ,null,null,null,null],
         [6   ,null,null,1   ,9   ,5   ,null,null,null],
@@ -81,33 +83,41 @@ class Sudoku{
         [null,9   ,null,null,null,null,4   ,null,null]   
         ] 
 
+        //cria o array tabuleiros e adiciona cada tabuleiro a ele
         let tabuleiros = [];
         tabuleiros.push(tabuleiro1);
         tabuleiros.push(tabuleiro2);
         tabuleiros.push(tabuleiro3);
 
+        //cria a variavel de randomTabuleiro que é igual ao array tabuleiros que pega o tamanho de tabuleiros e traz números aleatórios
+        //assim que randomiza os tabuleiros
         let randomTabuleiro = tabuleiros[Math.floor(Math.random() * tabuleiros.length)];
 
-        this.boardInitial = [];
-        this.boardResult = [];
-        this.board = [];
+        this.boardInitial = []; //o grandão
+        this.boardResult = []; //com resultados
+        this.board = []; //numeros
 
-        for(let i = 0; i < this.boardSize; i++){
-            let initial_row = [];
+        //
+        for(let i = 0; i < this.boardSize; i++){ 
+            //cria 1 linha pra cada vetor 
+            let initial_row = []; 
             let result_row = [];
             let board_row = [];
-            for(let j = 0; j < this.boardSize; j++){
+            for(let j = 0; j < this.boardSize; j++){ 
+                //adiciona o valor da coluna para cada linha
                 result_row.push(undefined);
                 board_row.push(randomTabuleiro[i][j]);
                 initial_row.push(randomTabuleiro[i][j]);
             }
+            //bota a linha dentro do vetor
             this.boardResult.push(result_row);
             this.boardInitial.push(initial_row);
             this.board.push(board_row);
         }
-
+        //volta as variáveis pro valor padrão
         this.selected = undefined;
         this.gameFinished = false;
+        //escreve o board
         this.drawBoard();
     }
 
@@ -125,7 +135,15 @@ class Sudoku{
             ctx.beginPath();
             let x = this.selected.x;
             let y = this.selected.y;
-            ctx.fillStyle = this.SELECTED_COLOR;
+            //mostrar em tempo real se o num está correto
+            if(this.boardResult[this.selected.y][this.selected.x] == true){
+               ctx.fillStyle = this.RIGHT_COLOR; 
+            }else if(this.boardResult[this.selected.y][this.selected.x] == false){
+                ctx.fillStyle = this.WRONG_COLOR;
+            }else{
+                ctx.fillStyle = this.SELECTED_COLOR;
+            }
+
             ctx.fillRect(x * step, y * step, step, step);
             ctx.stroke(); //comando para preencher
         }
@@ -134,15 +152,10 @@ class Sudoku{
             for(let y = 0; y < this.boardSize; y++){
                 for(let x = 0; x < this.boardSize; x++){
                     ctx.beginPath();
-                    switch(this.boardResult[y][x]){
-                        case this.BOARD_RIGHT:
-                            ctx.fillStyle = this.RIGHT_COLOR;
-                            break;
-                        case this.BOARD_WRONG:
-                            ctx.fillStyle = this.WRONG_COLOR;
-                            break;
-                        default:
-                            continue;
+                    if(this.boardResult[y][x]){
+                        ctx.fillStyle = this.RIGHT_COLOR;
+                    } else {
+                        ctx.fillStyle = this.WRONG_COLOR;
                     }
                     ctx.fillRect(x * step, y * step, step, step);                   
                 }
@@ -227,6 +240,7 @@ class Sudoku{
             return;
         }
         this.board[this.selected.y][this.selected.x] = n;
+        this.checkNumber(this.selected.x, this.selected.y);
         this.drawBoard();
     }
 
@@ -245,15 +259,17 @@ class Sudoku{
     }
 
     checkNumber(x, y){
-        this.checkLine(x, y, true); //Linha vertical
-        this.checkLine(x, y);       //Linha horizontal
-        this.checkSquare(x, y);     //Quadrado grande
+        let ok = 
+            this.checkLine(x, y, true)  //Linha vertical
+            && this.checkLine(x, y)     //Linha horizontal
+            && this.checkSquare(x, y);  //Quadrado grande
+        this.boardResult[y][x] = ok;
     }
 
     checkLine(x, y, vertical = false){
         if(!this.board[y][x]){
             this.boardResult[y][x] = null;
-            return;
+            return false;
         }
 
         for(let i = 0; i < this.boardSize; i++){
@@ -264,19 +280,17 @@ class Sudoku{
             }
 
             if(this.board[_y][_x] == this.board[y][x]){
-                this.boardResult[y][x] = this.BOARD_WRONG;
-                this.boardResult[_y][_x] = this.BOARD_WRONG;
-                continue;
+                return false;
             }
         }
 
-        this.boardResult[y][x] = this.BOARD_RIGHT;
+        return true;
     }
 
     checkSquare(x, y){
         if(!this.board[y][x]){
             this.boardResult[y][x] = null;
-            return;
+            return false;
         }
 
         let sqrSize = this.boardSize / 3;
@@ -291,13 +305,11 @@ class Sudoku{
                     continue;
                 }
                 if(this.board[y][x] == this.board[sy][sx]){
-                    this.boardResult[y][x] = this.BOARD_WRONG;
-                    this.boardResult[sy][sx] = this.BOARD_WRONG;
-                    continue;
+                    return false;
                 }
             }
         }
-        this.boardResult[y][x] = this.BOARD_RIGHT;
+        return true;
     }
 
     generateTestBoard(){
@@ -324,17 +336,13 @@ class Sudoku{
         let result = {erros: 0, acertos: 0};
         for(let y = 0; y < this.boardSize; y++){
             for(let x = 0; x < this.boardSize; x++){
-                switch(this.boardResult[y][x]){
-                    case this.BOARD_RIGHT:
-                        result.acertos++;
-                        break;
-                    case this.BOARD_WRONG || null:
-                        result.erros++;
-                        break;
+                if(this.boardResult[y][x]){
+                    result.acertos++;
+                }else{
+                    result.erros++;
                 }
             }
         }
-
         return result;
     }
 
@@ -374,7 +382,6 @@ function handleKeyboard(e){
 
     //Impede o input do teclado de afetar a página
     e.preventDefault(); 
-    
     let key = e.key;
 
     //Numeros 1 ate 9
@@ -405,7 +412,7 @@ function handleKeyboard(e){
 
 //PARTE DE INSTRUÇÕES E "SOBRE NÓS"
 $(document).ready(function(){
-    
+    //ao clique mostra as informações (instruções e sobre nós respectivamente)
     $("#botao1").click(function(){
         $("#texto1").slideToggle("slow");
     });
@@ -427,12 +434,14 @@ $(document).ready(function(){
     $('#terminar_jogo').on('click', (ev)=>{
         setTimeout(() => {
             if(confirm("Deseja realmente terminar o jogo?")){          
-                sudoku.finishGame();
+                r = sudoku.finishGame();
+                resultado(r);
+                console.log(r);
                 ev.target.disabled = true;
             }
         }, 150);
-        
     });
+
 
     $('#exportar').click(function(ev){
         let img = sudoku.exportAsImage();
@@ -464,3 +473,19 @@ $(document).ready(function(){
         keydiv.append(btn);
     }
 });
+
+
+// Função que mostrar as imagens de "vencedor" ou "perdedor" com base no erro
+function resultado(r){
+    if(r.erros == 0 ){
+            $("#wonGame").slideToggle("slow");
+        }else if(r.erros > 0){
+            $("#loseGame").slideToggle("slow");
+        }
+}
+
+//ao pressionar o botão "novo_jogo" as imagens irão desaparecer sem precisar de f5
+function refresh(){
+    $("#wonGame").slideUp("slow");
+    $("#loseGame").slideUp("slow");
+}

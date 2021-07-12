@@ -11,12 +11,13 @@
 	<body>
 		<header>
 			<h1>&nbsp;SUDOKU</h1>
-			
+			<img src="img/youwon.gif" id="wonGame">
+			<img src="img/loser.gif" id="loseGame">
 		</header>
 		
 		<section id="sudoku">
 			<nav>
-				<button id="novo_jogo">Novo jogo</button>
+				<button id="novo_jogo" onclick="refresh()">Novo jogo</button>
 				<button id="terminar_jogo">Terminar jogo</button>
 			</nav>
 			<canvas id="sudoku-canvas"> </canvas>

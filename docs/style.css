@@ -13,10 +13,31 @@ body{
 	font-family: 'High Tower Text';
 }
 
+section, header{
+	display: flex;
+	width: 50%;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	margin-bottom: 3%;
+}
+
 header{
 	width: fit-content;
 	padding-top: 2%;
 	margin-bottom: 4%;
+}
+
+#wonGame{
+	display: none;
+	width: 250px;
+	height: 250px;
+}
+
+#loseGame{
+	display: none;
+	width: 250px;
+	height: 250px;
 }
 
 h1{
@@ -28,14 +49,7 @@ h1{
 	text-shadow: 0px 2px 5px #a7a8ab;
 }
 
-section{
-	display: flex;
-	width: 50%;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-	margin-bottom: 3%;
-}
+
 
 section#sudoku{
 	position: relative;
