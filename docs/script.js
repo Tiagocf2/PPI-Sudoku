@@ -271,11 +271,6 @@ class Sudoku{
     checkBoard(){
         for(let y = 0; y < this.boardSize; y++){
             for(let x = 0; x < this.boardSize; x++){
-                /* Checa cada elemento do tablueiro para saber se há erros ou acertos*/
-                if(this.boardResult[y][x]){
-                    /* Se o elemento já tiver sido checado ele é pulado */
-                    continue;
-                }
                 /* Checa o númeoro na posição X, Y */
                 this.checkNumber(x, y);
             }
