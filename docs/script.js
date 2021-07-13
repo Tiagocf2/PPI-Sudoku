@@ -154,7 +154,6 @@ class Sudoku{
             /* Pinta o quadrado na posição selecionada 
             Tamanho do quadrado * posição do quadrado selecionado */
             ctx.fillRect(x * step, y * step, step, step);
-            ctx.stroke(); //comando para preencher
         }
         
         /* Quando o jogo termina, colore os quadrados com verde ou vermelho
@@ -179,7 +178,6 @@ class Sudoku{
                     ctx.fillRect(x * step, y * step, step, step);                   
                 }
             }
-            ctx.stroke();
         }
 
         /* Sudoku Grid 
