@@ -491,14 +491,13 @@ $(document).ready(function(){
         
     });
 
-    $('#terminar_jogo').on('click', (ev)=>{
+    $('#terminar_jogo').on('click', ()=>{
         /* Adiciona um delay de 150ms para o botão poder completar a animação sem travar. */
         setTimeout(() => {
             if(confirm("Deseja realmente terminar o jogo?")){          
                 r = sudoku.finishGame();
                 resultado(r);
-                console.log(r);
-                ev.target.disabled = true;
+                $('#terminar_jogo')[0].disabled = true;
             }
         }, 150);
     });
