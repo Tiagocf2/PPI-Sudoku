@@ -358,6 +358,12 @@ class Sudoku{
         image.replace("image/png", "image/octet-stream");
         return image;
     }
+	resizeCanvas(new_size){
+		this.size = new_size;
+		this.canvas.width = this.size;
+		this.canvas.height = this.size;
+		this.drawBoard();
+	}
 }
 
 function unfocus(e){

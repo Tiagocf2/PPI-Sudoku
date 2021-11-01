@@ -10,15 +10,19 @@ class Sudoku{
         this.FONT_COLOR = '#000';
         this.FONT_SIZE = '63px';
         this.FONT_FAMILY = 'arial';
-
+		
+		/*Variaveis*/
+		this.size = size;
+        this.boardSize = boardSize;
+        this.board = undefined;
+        this.gameFinished = false;
+		this.continuousCheck = false;
+		
         /* Referencia o Elemento HTML Canvas com o Objeto Sudoku */
         this.canvas = elemento_HTML; //Referencia do elemento
         this.canvas.sudoku = this; //Linkando objeto com a classe
 
-        this.size = size;
-        this.boardSize = boardSize;
-        this.board = undefined;
-        this.gameFinished = false;
+        
 
         /* Adicionando Eventos do Objeto Canvas */
         this.canvas.tabIndex = 1; //Faz o elemento ser focável
@@ -259,7 +263,9 @@ class Sudoku{
             return;
         }
         this.board[this.selected.y][this.selected.x] = n;
-        this.checkNumber(this.selected.x, this.selected.y);
+		if(this.continuousCheck){
+			this.checkNumber(this.selected.x, this.selected.y);
+		}
         this.drawBoard();
     }
 
@@ -411,7 +417,7 @@ class Sudoku{
         return result;
     }
 	
-	function unfocus(e){
+	unfocus(e){
 		this.sudoku.unselect();
 	}
 
@@ -420,7 +426,7 @@ class Sudoku{
 	Se o jogo não estiver terminado, ele pega a posição do mouse dentro do objeto Canvas,
 	transforma essa posição para a posição de um quadrado no tabuleiro e seleciona 
 	o quadrado nessa posição. */
-	function handleMouse(e){
+	handleMouse(e){
 		/* Ignora o resto da função se o jogo estiver terminado */
 		if(this.sudoku.gameFinished){
 			return;
@@ -441,7 +447,7 @@ class Sudoku{
 
 	/* Função para lidar com Input do Teclado.
 	Se o jogo não estiver terminado, ele pega a tecla apertada. */
-	function handleKeyboard(e){
+	handleKeyboard(e){
 		if(this.sudoku.gameFinished){
 			return;
 		}
@@ -468,4 +474,11 @@ class Sudoku{
         image.replace("image/png", "image/octet-stream");
         return image;
     }
+	
+	resizeCanvas(new_size){
+		this.size = new_size;
+		this.canvas.width = this.size;
+		this.canvas.height = this.size;
+		this.drawBoard();
+	}
 }
