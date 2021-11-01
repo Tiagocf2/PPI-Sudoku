@@ -34,9 +34,9 @@ Depois disso é só criar uma instância da classe **Sudoku** e passar o canvas 
 `canvas` - é a referência ao elemento HTML canvas, onde o Sudoku será executado.  
 `tamanho` - é um atributo opcional que define o tamanho do canvas. Por padrão é **500**.  
 <br>
-Agora é possível selecionar um quadrado com o mouse.
-Com o quadrado selecionado é possível inserir números de 1 à 9 apertando as respectivas teclas.
-Para remover um número utilize a tecla **Backspace**.
+Agora é possível selecionar um quadrado com o `mouse` ou com as `setas` do teclado.  
+Com o quadrado selecionado é possível inserir números de `1 à 9` apertando as respectivas teclas.
+Para remover um número utilize a tecla `Backspace`.
 
 <br><br>
 
@@ -109,4 +109,9 @@ A seguir será mostrado alguns elementos importantes para a manipulação desta 
   
 </html>
 ```
+
+<h1></h1>
+<br><br>
+
+##### Em dispositivos móveis não é possível inserir os números, então é preciso circunver isso adicionando botões, que então insiram os números no quadrado selecionado, utilize a função `inputNumber` do Sudoku. Isso acontece pois dispositivos móveis só abrem o teclado quando é selecionado um elemento de input. Veja o site do projeto por um dispositivo móvel como exemplo.
  
