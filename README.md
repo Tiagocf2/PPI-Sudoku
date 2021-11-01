@@ -35,7 +35,7 @@ Depois disso é só criar uma instância da classe **Sudoku** e passar o canvas 
 `tamanho` - é um atributo opcional que define o tamanho do canvas. Por padrão é **500**.  
 <br>
 Agora é possível selecionar um quadrado com o `mouse` ou com as `setas` do teclado.  
-Com o quadrado selecionado é possível inserir números de `1 à 9` apertando as respectivas teclas.
+Com o quadrado selecionado é possível inserir números de `1 à 9` apertando as respectivas teclas.  
 Para remover um número utilize a tecla `Backspace`.
 
 <br><br>
