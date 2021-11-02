@@ -26,7 +26,7 @@
 ## Como usar
 Primeiro importe o script para o seu projeto:  
 `<script type="text/javascript" src="https://tiagocf2.github.io/PPI-Sudoku/sudoku-canvas.js"></script>`    
-Ou baixe o arquivo JavaScript pelo link: https://tiagocf2.github.io/PPI-Sudoku/sudoku-canvas.js  
+Ou [baixe o arquivo JavaScript aqui](https://raw.githubusercontent.com/Tiagocf2/PPI-Sudoku/master/docs/sudoku-canvas.js).  
 <br>
 Note que é preciso ter um elemento **Canvas** no HTML para executar o Sudoku.  
 Depois disso é só criar uma instância da classe **Sudoku** e passar o canvas como referência.  
