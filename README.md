@@ -74,7 +74,7 @@ A seguir será mostrado alguns elementos importantes para a manipulação desta 
 <br><br>
 
 ## Exemplo de Implementação
-```
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
