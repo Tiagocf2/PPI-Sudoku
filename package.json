@@ -1,0 +1,33 @@
+{
+  "name": "react-ppi-sudoku",
+  "version": "1.0.0",
+  "description": "An out of the box ready for use react sudoku canvas-built component",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tiagocf2/PPI-Sudoku.git"
+  },
+  "keywords": [
+    "react",
+    "sudoku",
+    "canvas"
+  ],
+  "author": "Tiago C Frausino <tiago.tcf2@gmail.com> (https://github.com/Tiagocf2)",
+  "contributors": [
+    "Nikolle de Lacerda Nascimento"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tiagocf2/PPI-Sudoku/issues"
+  },
+  "homepage": "https://github.com/Tiagocf2/PPI-Sudoku#readme",
+  "dependencies": {
+    "react": "^18.2.0"
+  }
+}
