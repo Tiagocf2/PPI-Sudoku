@@ -512,16 +512,13 @@ class Sudoku {
   }
 }
 
-const SudokuCanvas = React.forwardRef((props, ref) => {
-  return <canvas ref={ref} {...props} />;
-});
-
-const useSudoku = (config) => {
+const useSudoku = (config = {}) => {
   const canvas = useRef();
   const sudoku = useMemo(() => new Sudoku(canvas.current, config), [config]);
-  return [<SudokuCanvas ref={canvas} />, sudoku];
+  return [<canvas ref={ref} />, sudoku];
 };
 
 export default Sudoku;
-export { SudokuCanvas, useSudoku, Sudoku, MobileKeyboard };
+export { useSudoku, Sudoku, MobileKeyboard };
+export * from 'useSudoku';
 export * from 'MobileKeyboard';
