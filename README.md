@@ -106,7 +106,6 @@ A seguir será mostrado alguns elementos importantes para a manipulação desta 
       download.click();
     }
   </script>
-  
 </html>
 ```
 
