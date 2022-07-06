@@ -33,7 +33,7 @@ class Sudoku {
     /* Adicionando Eventos do Objeto Canvas */
     this.canvas.tabIndex = 1; //Faz o elemento ser focável
     this.canvas.addEventListener("focusout", unfocus);
-    this.canvas.addEventListener("mouseup", handleMouse);
+    this.canvas.addEventListener("pointerup", handleMouse);
     this.canvas.addEventListener("keydown", handleKeyboard);
 
     /* Determina as dimensões do Canvas */
@@ -456,22 +456,19 @@ Se o jogo não estiver terminado, ele pega a posição do mouse dentro do objeto
 transforma essa posição para a posição de um quadrado no tabuleiro e seleciona 
 o quadrado nessa posição. */
 function handleMouse(e) {
-  /* Ignora o resto da função se o jogo estiver terminado */
   if (this.sudoku.gameFinished) {
     return;
   }
 
-  //Posição X dentro do objeto
-  let x = e.layerX;
-  //Posição Y dentro do objeto
-  let y = e.layerY;
-  //Tamanho de cada quadrado
+  let x = e.offsetX || e.layerX;
+  let y = e.offsetY || e.layerY;
+  
   let tamanho = this.clientWidth / this.sudoku.boardSize;
-  x = Math.floor(x / tamanho); //Floor -> remove casas decimais
+  x = Math.floor(x / tamanho);
   y = Math.floor(y / tamanho);
 
   this.sudoku.select(x, y);
-  this.sudoku.lastSelection = { x: x, y: y };
+  this.sudoku.lastSelection = { x, y };
 }
 
 /* Função para lidar com Input do Teclado.
