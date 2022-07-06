@@ -1,54 +1,36 @@
-import React from "react";
 import * as c from "./constants";
 
 class Sudoku {
-  constructor(
-    elemento_HTML,
-    {
-      size = c.DEFAULT_SIZE,
-      selected = c.DEFAULT_SELECTED_COLOR,
-      bg = c.DEFAULT_BACKGROUND_COLOR,
-      grid = c.DEFAULT_GRID_COLOR,
-      right = c.DEFAULT_RIGHT_COLOR,
-      wrong = c.DEFAULT_WRONG_COLOR,
-      font: {
-        color: fontColor = c.DEFAULT_FONT_COLOR,
-        size: fontSize = c.DEFAULT_FONT_SIZE,
-        family: fontFamily = c.DEFAULT_FONT_FAMILY,
-        fill: fontFill = true,
-      },
-      foregroundFinish = c.DEFAULT_FINISHED_FOREGROUND_COLOR,
-    }
-  ) {
+  constructor(elemento_HTML, size = 500) {
     /*CONSTANTES*/
-    this.SELECTED_COLOR = selected;
-    this.BACKGROUND_COLOR = bg;
-    this.GRID_COLOR = grid;
-    this.FINISHED_FOREGROUND_COLOR = foregroundFinish;
-    this.RIGHT_COLOR = right;
-    this.WRONG_COLOR = wrong;
-    this.FONT_COLOR = fontColor;
-    this.FONT_SIZE = fontSize;
-    this.FONT_FAMILY = fontFamily;
-    this.FONT_FILL = fontFill;
+    this.SELECTED_COLOR = c.DEFAULT_SELECTED_COLOR;
+    this.BACKGROUND_COLOR = c.DEFAULT_BACKGROUND_COLOR;
+    this.GRID_COLOR = c.DEFAULT_GRID_COLOR;
+    this.FINISHED_FOREGROUND_COLOR = c.DEFAULT_FINISHED_FOREGROUND_COLOR;
+    this.RIGHT_COLOR = c.DEFAULT_RIGHT_COLOR;
+    this.WRONG_COLOR = c.DEFAULT_WRONG_COLOR;
+    this.FONT_COLOR = c.DEFAULT_FONT_COLOR;
+    this.FONT_SIZE = c.DEFAULT_FONT_SIZE;
+    this.FONT_FAMILY = c.DEFAULT_FONT_FAMILY;
+    this.FONT_FILL = true;
 
     /* Referencia o Elemento HTML Canvas com o Objeto Sudoku */
     this.canvas = elemento_HTML; //Referencia do elemento
-    this.canvas.sudoku = this; //Linkando objeto com a classe
+    //this.canvas.sudoku = this; //Linkando objeto com a classe
 
     this.size = size;
-    this.boardSize = boardSize;
+    this.boardSize = c.DEFAULT_BOARD_SIZE;
     this.board = undefined;
     this.gameFinished = false;
 
     /* Adicionando Eventos do Objeto Canvas */
     this.canvas.tabIndex = 1; //Faz o elemento ser focável
-    this.canvas.addEventListener("focusout", this.unselect);
-    this.canvas.addEventListener("pointerup", this.handlePointer);
-    this.canvas.addEventListener("keydown", this.handleKeyboard);
+    this.canvas.addEventListener("focusout", this.unselect.bind(this));
+    this.canvas.addEventListener("mouseup", this.handlePointer.bind(this));
+    this.canvas.addEventListener("keydown", this.handleKeyboard.bind(this));
 
     /* Determina as dimensões do Canvas 
-     (Impossível determinar por CSS) */
+       (Impossível determinar por CSS) */
     this.canvas.width = this.size;
     this.canvas.height = this.size;
 
@@ -56,7 +38,7 @@ class Sudoku {
   }
 
   /*Cria diferentes tabuleiros padrões e escolhe um aleatório.
-    Inicializa as matrizes do tabuleiro. */
+      Inicializa as matrizes do tabuleiro. */
   criarNovoJogo() {
     //tabuleiros
     let tabuleiro1 = [
@@ -139,21 +121,21 @@ class Sudoku {
     let ctx = this.canvas.getContext("2d");
 
     /* Clear Canvas 
-        Pinta o quadro todo de branco*/
+          Pinta o quadro todo de branco*/
     ctx.beginPath();
     ctx.fillStyle = this.BACKGROUND_COLOR;
     ctx.fillRect(0, 0, this.size, this.size);
 
     /* Selected Square
-        Pinta o quadrado selecionado */
+          Pinta o quadrado selecionado */
     if (this.selected) {
       ctx.beginPath();
       let x = this.selected.x;
       let y = this.selected.y;
       /* Mostrar em tempo real se o numero está correto 
-            Se estiver correto muda a cor para verde.
-            Se estiver errado muda a cor para vermelho.
-            Senão usa a cor padrão cinza. */
+              Se estiver correto muda a cor para verde.
+              Se estiver errado muda a cor para vermelho.
+              Senão usa a cor padrão cinza. */
       if (this.boardResult[this.selected.y][this.selected.x] == true) {
         ctx.fillStyle = this.RIGHT_COLOR;
       } else if (this.boardResult[this.selected.y][this.selected.x] == false) {
@@ -163,12 +145,12 @@ class Sudoku {
       }
 
       /* Pinta o quadrado na posição selecionada 
-            Tamanho do quadrado * posição do quadrado selecionado */
+              Tamanho do quadrado * posição do quadrado selecionado */
       ctx.fillRect(x * step, y * step, step, step);
     }
 
     /* Quando o jogo termina, colore os quadrados com verde ou vermelho
-        dependendo se estão certo ou errado. */
+          dependendo se estão certo ou errado. */
     if (this.gameFinished) {
       for (let y = 0; y < this.boardSize; y++) {
         for (let x = 0; x < this.boardSize; x++) {
@@ -192,33 +174,33 @@ class Sudoku {
     }
 
     /* Sudoku Grid 
-        Desenha as linhas verticais e horizontais da grade */
+          Desenha as linhas verticais e horizontais da grade */
     for (let i = 0; i <= this.boardSize; i++) {
       ctx.beginPath();
       ctx.strokeStyle = this.GRID_COLOR;
       /* Tamanho padrao da linha é 1.
-            Mas a cada 3 linhas muda o tamanho para 4. */
+              Mas a cada 3 linhas muda o tamanho para 4. */
       ctx.lineWidth = 1;
       if (i % 3 == 0) {
         ctx.lineWidth = 4;
       }
 
       /* Vertical 
-            Move o começo da linha para X = tamanho do quadrado * i e Y = 0.
-            Move o fim da linha para Y = tamanho do quadro */
+              Move o começo da linha para X = tamanho do quadrado * i e Y = 0.
+              Move o fim da linha para Y = tamanho do quadro */
       ctx.moveTo(step * i, 0);
       ctx.lineTo(step * i, this.size);
       ctx.stroke();
 
       /* Horizontal 
-            Igual ao vertical com os valores invertidos */
+              Igual ao vertical com os valores invertidos */
       ctx.moveTo(0, step * i);
       ctx.lineTo(this.size, step * i);
       ctx.stroke();
     }
 
     /* Numbers 
-        Desenha cada número do 'board' no tabuleiro em seus respectivos quadrados*/
+          Desenha cada número do 'board' no tabuleiro em seus respectivos quadrados*/
     let offset = step / 2;
     ctx.beginPath();
     /* Define o estilo do texto */
@@ -235,13 +217,13 @@ class Sudoku {
           //Faz a medição do texto
           let metrics = ctx.measureText(text);
           /*Calcula a altura do texto, somando a distancia da baseline do texto até o topo com a distancia até em baixo. 
-                    Depois divide por 2 para pegar o meio do texto.*/
+                      Depois divide por 2 para pegar o meio do texto.*/
           let textOffset =
             (metrics.actualBoundingBoxAscent +
               metrics.actualBoundingBoxDescent) /
             2;
           /* Se o número estiver no tabuleiro inicial escreve ele com preenchimento
-                    Senão escreve ele sem preenchimento. */
+                      Senão escreve ele sem preenchimento. */
           if (this.boardInitial[y][x] != null) {
             ctx.fillText(
               this.board[y][x],
@@ -283,7 +265,7 @@ class Sudoku {
   }
 
   /* Escreve o número dado na posição previamente selecionada,
-    checa se o número está correto e atualiza o quadro */
+      checa se o número está correto e atualiza o quadro */
   inputNumber(n) {
     if (!this.selected) {
       return;
@@ -307,10 +289,10 @@ class Sudoku {
   }
 
   /* Checa um número na posição dada 
-    e define o estado dele no Resultado do Tabuleiro (boardResult).
-    true = certo.
-    false = errado.
-    null = quadrado vazio. */
+      e define o estado dele no Resultado do Tabuleiro (boardResult).
+      true = certo.
+      false = errado.
+      null = quadrado vazio. */
   checkNumber(x, y) {
     let ok = this.checkLine(x, y, true); //Linha vertical
     let ok2 = this.checkLine(x, y); //Linha horizontal
@@ -323,7 +305,7 @@ class Sudoku {
   }
 
   /* Checa, para um número na posição dada, a validade dele na linha.
-    O argumento 'vertical' define se a checagem será da linha horizontal ou vertical. */
+      O argumento 'vertical' define se a checagem será da linha horizontal ou vertical. */
   checkLine(x, y, vertical = false) {
     /* Se o número for nulo retorna nulo */
     if (!this.board[y][x]) {
@@ -333,14 +315,14 @@ class Sudoku {
     /* Itera sobre cada elemento da linha */
     for (let i = 0; i < this.boardSize; i++) {
       /* Esta expressão lógica determina se a checagem da linha será vertical ou horizontal. 
-            Para as linhas horizontais (vertical = false), o valor de Y é fixo (y * !vertical) e o de X é que muda (!vertical * i).
-            Para as linhas verticais (vertical = true), o valor de Y é móvel (vertical * i) enquanto o de X é fixo (x * vertical).
-            Note que o Javascript trata True como 1 e False como 0 no contexto de equações matemáticas. */
+              Para as linhas horizontais (vertical = false), o valor de Y é fixo (y * !vertical) e o de X é que muda (!vertical * i).
+              Para as linhas verticais (vertical = true), o valor de Y é móvel (vertical * i) enquanto o de X é fixo (x * vertical).
+              Note que o Javascript trata True como 1 e False como 0 no contexto de equações matemáticas. */
       let _y = y * !vertical + vertical * i;
       let _x = x * vertical + !vertical * i;
 
       /* Se a posição que está sendo checada (_x, _y) for igual à posição
-             do número dado (x, y) então pula a checagem para evitar falsos negativos. */
+               do número dado (x, y) então pula a checagem para evitar falsos negativos. */
       if (_y == y && _x == x) {
         continue;
       }
@@ -352,7 +334,7 @@ class Sudoku {
     }
 
     /* Se o número passar por todas as checagens sem a função retornar,
-        então retorna True (correto). */
+          então retorna True (correto). */
     return true;
   }
 
@@ -374,7 +356,7 @@ class Sudoku {
     for (let sy = sqrY * sqrSize; sy < sqrMaxY; sy++) {
       for (let sx = sqrX * sqrSize; sx < sqrMaxX; sx++) {
         /* Se a posição que está sendo checada (sx, sy) for igual à posição
-                 do número dado (x, y) então pula a checagem para evitar falsos negativos.. */
+                   do número dado (x, y) então pula a checagem para evitar falsos negativos.. */
         if (sx == x && sy == y) {
           continue;
         }
@@ -387,25 +369,25 @@ class Sudoku {
     }
 
     /* Se o número passar por todas as checagens sem a função retornar,
-        então retorna True (correto). */
+          então retorna True (correto). */
     return true;
   }
 
   /** #### Gera um Tabuleiro válido para testes.
-    | | | | | | | | | | | |
-    |-|-|-|-|-|-|-|-|-|-|-|
-    |1|2|3|  |4|5|6|  |7|8|9|  
-    |4|5|6|  |7|8|9|  |1|2|3|  
-    |7|8|9|  |1|2|3|  |4|5|6|  
-    | | | |  | | | |  | | | |  
-    |2|3|4|  |5|6|7|  |8|9|1|  
-    |5|6|7|  |8|9|1|  |2|3|4|  
-    |8|9|1|  |2|3|4|  |5|6|7|  
-    | | | |  | | | |  | | | |  
-    |3|4|5|  |6|7|8|  |9|1|2|  
-    |6|7|8|  |9|1|2|  |3|4|5|  
-    |9|1|2|  |3|4|5|  |6|7|8|  
-    */
+      | | | | | | | | | | | |
+      |-|-|-|-|-|-|-|-|-|-|-|
+      |1|2|3|  |4|5|6|  |7|8|9|  
+      |4|5|6|  |7|8|9|  |1|2|3|  
+      |7|8|9|  |1|2|3|  |4|5|6|  
+      | | | |  | | | |  | | | |  
+      |2|3|4|  |5|6|7|  |8|9|1|  
+      |5|6|7|  |8|9|1|  |2|3|4|  
+      |8|9|1|  |2|3|4|  |5|6|7|  
+      | | | |  | | | |  | | | |  
+      |3|4|5|  |6|7|8|  |9|1|2|  
+      |6|7|8|  |9|1|2|  |3|4|5|  
+      |9|1|2|  |3|4|5|  |6|7|8|  
+      */
   generateTestBoard() {
     for (let y = 0; y < this.boardSize; y++) {
       let of = (y % 3) * 3 + Math.floor(y / 3);
@@ -461,25 +443,25 @@ class Sudoku {
    * transforma essa posição para a posição de um quadrado no tabuleiro e seleciona
    * o quadrado nessa posição. */
   handlePointer(e) {
-    if (this.sudoku.gameFinished) {
+    if (this.gameFinished) {
       return;
     }
 
     let x = e.offsetX || e.layerX;
     let y = e.offsetY || e.layerY;
 
-    let tamanho = this.clientWidth / this.sudoku.boardSize;
+    let tamanho = this.canvas.clientWidth / this.boardSize;
     x = Math.floor(x / tamanho);
     y = Math.floor(y / tamanho);
 
-    this.sudoku.select(x, y);
-    this.sudoku.lastSelection = { x, y };
+    this.select(x, y);
+    this.lastSelection = { x, y };
   }
 
   /** #### Função para lidar com evento do Teclado.
    * Processa a tecla apertada se o jogo não estiver terminado. */
   handleKeyboard(e) {
-    if (this.sudoku.gameFinished) {
+    if (this.gameFinished) {
       return;
     }
 
@@ -488,37 +470,27 @@ class Sudoku {
 
     if (key >= 1 && key <= 9) {
       let number = parseInt(key);
-      this.sudoku.inputNumber(number);
+      this.inputNumber(number);
     }
 
     if (key == "Backspace") {
       /* Define o valor do número como nulo, essencialmente apagando ele. */
-      this.sudoku.inputNumber(null);
+      this.inputNumber(null);
     }
 
     if (key == "ArrowRight") {
-      this.sudoku.select(this.sudoku.selected.x + 1, this.sudoku.selected.y);
+      this.select(this.selected.x + 1, this.selected.y);
     }
     if (key == "ArrowLeft") {
-      this.sudoku.select(this.sudoku.selected.x - 1, this.sudoku.selected.y);
+      this.select(this.selected.x - 1, this.selected.y);
     }
     if (key == "ArrowUp") {
-      this.sudoku.select(this.sudoku.selected.x, this.sudoku.selected.y - 1);
+      this.select(this.selected.x, this.selected.y - 1);
     }
     if (key == "ArrowDown") {
-      this.sudoku.select(this.sudoku.selected.x, this.sudoku.selected.y + 1);
+      this.select(this.selected.x, this.selected.y + 1);
       return false;
     }
   }
 }
-
-const useSudoku = (config = {}) => {
-  const canvas = useRef();
-  const sudoku = useMemo(() => new Sudoku(canvas.current, config), [config]);
-  return [<canvas ref={ref} />, sudoku];
-};
-
 export default Sudoku;
-export { useSudoku, Sudoku, MobileKeyboard };
-export * from 'useSudoku';
-export * from 'MobileKeyboard';
