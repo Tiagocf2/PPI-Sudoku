@@ -1,0 +1,17 @@
+.sudoku-mobile-kb{
+    display: grid;
+    grid-template: auto auto auto auto / auto auto auto;
+}
+
+.sudoku-mobile-kb-button{
+    aspect-ratio: 1;
+    padding: 0.25em;
+    border: 1px solid #bbb;
+    border-radius: 1000vw;
+    background-color: transparent;
+}
+
+.sudoku-mobile-kb-delete{
+    aspect-ratio: unset;
+    background-color: rgba(#e55, 0.5);
+}
